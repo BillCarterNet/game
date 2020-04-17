@@ -1,3 +1,47 @@
+const levelStructure = [
+    {
+        name: 'block1',
+        struct: [
+            'NNNNN',
+            'BNNNB',
+            'BBNBB',
+            'BBNBB',
+            'BNNNB',
+        ]
+    },
+    {
+        name: 'block2',
+        struct: [
+            'BNNNB',
+            'BNNNB',
+            'NNNNN',
+            'NNNNB',
+            'NHHNN',
+        ]
+    },    
+    {
+        name: 'block3',
+        struct: [
+            'NNNNN',
+            'NNHNN',
+            'NHHHN',
+            'NNHNN',
+            'NNNNN',
+        ]
+    },
+    {
+        name: 'block4',
+        struct: [
+            'BBBBN',
+            'NBBBN',
+            'NNBNN',
+            'NNNNN',
+            'NNNNN',
+        ]
+    },
+
+];
+
 let levels = {
 
     eMapNameForLevel: function(level) {
@@ -26,16 +70,11 @@ let levels = {
     
     },
 
-    section: {
-        name: 'block1',
-        struct: [
-            'NNNNN',
-            'NNHBN',
-            'BNBNB',
-            'NNHNB',
-            'NHHHN',
-        ]
-    },
+    getSection: function(i) {
+
+        return levelStructure[i].struct;
+
+    }
 
 };
 

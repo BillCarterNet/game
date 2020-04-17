@@ -66,7 +66,7 @@ function addPlayerHud() {
 
 function addMessageArea() {
 
-    addRule('#messageArea', 'top: 200px;');
+    addRule('#messageArea', 'top: 50px;');
     addRule('#messageArea', 'right: 200px;');
     addRule('#messageArea', 'left: 400px;');
     addRule('#messageArea', 'width: 480px;');
@@ -104,6 +104,23 @@ function addPlayerHealthBar() {
 
 }
 
+function addPlayerThrustBarContainer() {
+
+    addRule('#thrustBarContainer', 'margin-left: 10%;');
+    addRule('#thrustBarContainer', 'margin-right: 10%;');
+    addRule('#thrustBarContainer', 'border: 1px solid #d3d3d3;');
+    addRule('#thrustBarContainer', 'height: 20px;');
+
+}
+  
+function addPlayerThrustBar() {
+
+    addRule('#thrustBar', 'background-color: rgba(0, 200, 0, 0.5)');
+    addRule('#thrustBar', 'height: 20px;');
+    addRule('#thrustBar', 'width: 100%;');
+
+}
+
 let cssSetup = {
 
     addCss: function() {
@@ -117,16 +134,26 @@ let cssSetup = {
         addDebugHud();
         addPlayerHealthBarContainer();
         addPlayerHealthBar();
+        addPlayerThrustBarContainer();
+        addPlayerThrustBar();
 
     },
 
-    setHealth: function (x) {
+    displayHealth: function (x) {
 
         if (x <= 0) {x = 0};
         if (x >= 100) {x = 100};
         addRule('#healthBar', `width: ${x}%;`);        
 
-    }
+    },
+
+    displayThrust: function (x) {
+
+        if (x <= 0) {x = 0};
+        if (x >= 100) {x = 100};
+        addRule('#thrustBar', `width: ${x}%;`);        
+
+    },
 
 };
 

@@ -14,6 +14,7 @@ let gameState = {
     gameBoot: 0, // time in ms
     gameTime: 0, // time in ms
     gameTimeLastFrame: 0, // time in ms
+    //gameTimeDelta: this.gameTime - this.gameTimeLastFrame,
 
     setGameBoot: function() {
         this.gameBoot = date.getTime();
@@ -27,6 +28,10 @@ let gameState = {
     init: function() {
         this.score = 0;
         this.level = 1;
+    },
+
+    getGameTimeDelta: function() {
+        return this.gameTime - this.gameTimeLastFrame;
     },
 
 };

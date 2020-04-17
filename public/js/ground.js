@@ -1,6 +1,9 @@
+// Imports
 import { levels } from './levels.js';
 import { gameState } from './gameState.js';
+import { gameConfig } from './gameConfig.js';
 
+// Privates
 function getUrlsFromLevel(level) { return [
 
     `../images/environment_map/${levels.eMapNameForLevel(level)}_ft.${levels.eMapFormatForLevel(level)}`,
@@ -12,40 +15,33 @@ function getUrlsFromLevel(level) { return [
 
 ]};
 
-let urls = getUrlsFromLevel(gameState.level);
+function getCubemap(urls) {
 
-// wrap it up into the object that we need
-let cubemap = THREE.ImageUtils.loadTextureCube(urls);
+    let cubemap = THREE.ImageUtils.loadTextureCube(urls);
+    cubemap.format = THREE.RGBFormat;
+    return cubemap;
 
-// set the format, likely RGB
-// unless you've gone crazy
-cubemap.format = THREE.RGBFormat;
+};
 
-// Set up the material
-let reflectionMaterialGround = new THREE.MeshBasicMaterial({
+function getReflectionMaterial(cubemap) {
 
-    color: 0x9999FF,
-    envMap: cubemap,
+    return new THREE.MeshBasicMaterial({
 
-});
+        color: 0xAA6600,
+        envMap: cubemap,
+    
+    })
 
-const tileWidth = 5;
-const titleHeight = 1;
-const tileLength = 5;
+};
 
-// Set up the geometry
-let geometry = new THREE.BoxGeometry(tileWidth, titleHeight, tileLength);
-
-// Set up the object
-let object = new THREE.Mesh(geometry, reflectionMaterialGround);
-
-object.position.x = 0;
-object.position.y = 0;
-object.position.z = -10;
-
-function determineTileOffsets (sectionX, sectionZ) {
+function determineTileOffsets(sectionX, sectionZ) {
 
 /*
+
+    Level is a collection of grids
+    A Grid is a 5 x 5 square of Tiles
+    A tile is one of 3 types
+
 
 X ->
 Z        -2  -1   0   1   2
@@ -65,92 +61,116 @@ v     2 |   |   |   |   |   |
 
     return {
 
-        xOffset: sectionX * tileWidth,
-        zOffset: sectionZ * tileLength,
+        xOffset: sectionX * gameConfig.tile.width,
+        zOffset: sectionZ * gameConfig.tile.length,
     
-    }
+    };
+
 }
 
-function buildNormalTile (sectionX, sectionY) {
+function createGridObjectArray(i, reflectionMaterial) {
 
-    return {
-        x: 0,
-        y: 0,
-        z: 0,
-        width: 10,
-        height: 5,
-        lenght: 10,
+    let gridArray = [];
+
+    // loop through grid rows
+    for(let row = -2; row <= 2 ; row++) {
+        // loop through line
+        for(let char = -2 ; char <= 2 ; char++) {
+            let tileType = levels.getSection(i)[row+2].charAt(char+2);
+            let height = 0;
+            switch(tileType) {
+                case 'N':
+                    height = gameConfig.tile.height.normal;
+                    break;
+                case 'H':
+                    height = 0;
+                    break;
+                case 'B':
+                    height = gameConfig.tile.height.block;
+                    break;
+            }
+            let tileGeometry = new THREE.BoxGeometry(gameConfig.tile.width, height, gameConfig.tile.length);
+            let tile = {};
+            if (tileType != 'H') {
+                tile = new THREE.Mesh(tileGeometry, reflectionMaterial);
+                tile.position.x = determineTileOffsets(char, row).xOffset;
+                tile.position.y = 0.5 * height;
+                tile.position.z = determineTileOffsets(char, row).zOffset - (5 * i * gameConfig.tile.length);
+                tile.type = tileType;
+                gridArray.push(tile);
+            }
+
+        }
     }
 
-}; // normal tile
-const barrierBlock = 0; // taller
-const holeBlock = 0; // empty
+    return gridArray;
 
+}
+
+let reflectionMaterial = {};
+
+let levelArray = {};
+
+// Publics
 var ground = {
 
-    addToScene: function(scene) {
-
-        scene.add(object);
-
-    },
-
-    removeFromScene: function(scene) {
-
-        scene.remove(object);
-
-    },
-    
-    move:function(x, y, z) {
-
-        object.position.x += x;
-        object.position.y += y;
-        object.position.z += z;
-
-    },
-
-    rotate: function(x, y, z) {
-
-        object.rotateX(x);
-        object.rotateY(y);
-        object.rotateZ(z);
-
-    },
-
-    getPosVector: function() {
-
-        return new THREE.Vector3(
-            object.position.x,
-            object.position.y,
-            object.position.z,
+    createLevel: function() {
+        reflectionMaterial = getReflectionMaterial(
+            getCubemap(
+                getUrlsFromLevel(
+                    gameState.level
+                )
+            )
         );
+        levelArray = createGridObjectArray(0, reflectionMaterial).concat(
+            createGridObjectArray(1, reflectionMaterial),
+            createGridObjectArray(2, reflectionMaterial),
+            createGridObjectArray(3, reflectionMaterial),
+        );
+    },
+
+    addLevelToScene: function(scene) {
+
+        for (let i = 0 ; i < levelArray.length ; i++) {
+            scene.add(levelArray[i]);
+
+        }       
 
     },
 
-    getPosX: function() {
+    removeLevelFromScene: function(scene) {
 
-        return object.position.x;
-
-    },
-
-    setLevelTextures: function() {
-
-        urls = getUrlsFromLevel(gameState.level);
-        cubemap = THREE.ImageUtils.loadTextureCube(urls);
-        reflectionMaterialGround = new THREE.MeshBasicMaterial({
-
-            color: 0x9999FF,
-            envMap: cubemap,
-        
-        });
-        object = new THREE.Mesh(geometry, reflectionMaterialGround);
+        for (let i = 0 ; i < levelArray.length ; i++) {
+            scene.remove(levelArray[i]);
+        }
 
     },
 
-    process: function() {
+    processLevel: function() {
 
-        this.move(0, 0, 0);
+        for (let i = 0 ; i < levelArray.length ; i++) {
+            levelArray[i].position.z += gameConfig.gameSpeed * gameState.getGameTimeDelta() * 0.001;
+        }
 
     },
+
+    getNoOfTilesByType: function(type) {
+
+        let count = 0;
+        for (let i = 0 ; i < levelArray.length ; i++) {
+            if (levelArray[i].type == type) {
+                count++;
+            }
+        }
+        return count;
+
+    },
+
+    getNoOfTiles: function() {
+
+        return levelArray.length;
+
+    }
 
 };
 

@@ -10,16 +10,16 @@ let camera = new THREE.PerspectiveCamera(
 );
 
 camera.position.x = 0;
-camera.position.y = 10;
-camera.position.z = 10;
+camera.position.y = 5;
+camera.position.z = 20;
 
 let gameCamera = {
 
     init: function() {
 
         camera.position.x = 0;
-        camera.position.y = 10;
-        camera.position.z = 10;
+        camera.position.y = 1;
+        camera.position.z = 20;
 
         return camera;
 
@@ -56,6 +56,12 @@ let gameCamera = {
             camera.lookAt.z,
 
         )
+
+    },
+
+    moveLookAtVector: function(x, y, z) {
+
+
 
     },
 

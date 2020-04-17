@@ -35,6 +35,18 @@ function populatePlayerHud() {
     healthBar.setAttribute('id', 'healthBar');
     healthBarContainer.appendChild(healthBar);
 
+    let thrustLabel = document.createElement('p');
+    thrustLabel.innerText = 'Thrust';
+    playerHud.appendChild(thrustLabel);
+
+    let thrustBarContainer = document.createElement('div');
+    thrustBarContainer.setAttribute('id', 'thrustBarContainer');
+    playerHud.appendChild(thrustBarContainer);
+
+    let thrustBar = document.createElement('div');
+    thrustBar.setAttribute('id', 'thrustBar');
+    thrustBarContainer.appendChild(thrustBar);
+
     let scoreLabel = document.createElement('p');
     scoreLabel.innerText = 'Score';
     playerHud.appendChild(scoreLabel);
@@ -76,21 +88,28 @@ function populateDebugArea() {
 
     const debugArea = document.getElementById('debugHud');
     debugArea.setAttribute('hidden', 'true');
-    const headingsPlayer = ['X', 'Y', 'Z', ];
+    const headingsLevel = ['LEVEL', 'Tiles', 'Blocks', 'Holes', 'Normal'];
+    const headingsPlayer = ['VECTOR', 'X', 'Y', 'Z', ];
     const headingsCamera = ['VECTOR', 'X', 'Y', 'Z', ];
     const headingsGameState = ['STATE', 'VALUE', ];
     const headingsFrame = ['FRAME (count)', 'TIME (ms)', 'FPS (lifetime)', 'FPS (last frame)', ];
+    const headingConfig = ['STATE', 'VALUE', ];
     const title = document.createElement('h1');
     title.innerText = '-[DEBUG]-';
     debugArea.appendChild(title);
-    let table = createTable('GROUND', 'player', 1, 3, headingsPlayer);
+    let table = createTable('LEVEL', 'level', 1, 5, headingsLevel);
+    debugArea.appendChild(table);
+    table = createTable('PLAYER', 'player', 2, 4, headingsPlayer);
     debugArea.appendChild(table);
     table = createTable('CAMERA', 'camera', 2, 4, headingsCamera);
     debugArea.appendChild(table);
-    table = createTable('GAME STATE', 'gameState', 4, 2, headingsGameState);
+    table = createTable('GAME STATE', 'gameState', 6, 2, headingsGameState);
     debugArea.appendChild(table);
     table = createTable('PERFORMANCE', 'frame', 1, 4, headingsFrame);
     debugArea.appendChild(table);
+    table = createTable('CONFIG', 'config', 6, 2, headingConfig);
+    debugArea.appendChild(table);
+
 }
 
 function createTable(title, id, rows, cols, headings) {
@@ -134,15 +153,18 @@ function writePlayerArea(state) {
     
     switch (state) {
         case 'preGame':
-            h1.innerText = 'A game by Bill Carter';
+            h1.innerText = 'A game by William Carter';
             text = '<u>Controls</u><br><br>';
-            text += 'o/p - move X +/-   z/x - rotate X +/-<br>';
-            text += 'q/a - move Y +/-   c/v - rotate Y +/-<br>';
-            text += 'w/s - move Z +/-   b/n - rotate Z +/-<br>';
-            text += 'r/f - move camera Y +/-<br>';    
-            text += 'd - toggle debug<br>';
-            text += 't - toggle camera on object<br>';
-            text += 'h - skip level';
+            text += 'o / p - move camera X + / -<br>';
+            text += 'i / k - move camera Y + / -<br>';
+            text += 'u / j - move camera Z + / -<br>';
+            text += '<br>';
+            text += 'd - toggle debug window<br>';
+            text += 'h - skip level<br>';
+            text += 't - toggle player look<br>';
+            text += 'm - upward impuls<br>';
+            text += '<br>';
+            text += 'r / f / v - gameSpeed +0.1 / -0.1 / 0'
             text += '<br><br><strong>Press any key to start</strong>';
             break;
         case 'gameOver':

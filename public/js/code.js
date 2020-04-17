@@ -12,6 +12,7 @@ import { gameState } from './gameState.js';
 import { debug } from './debug.js';
 import { gameCamera } from './gameCamera.js';
 import { hud } from './hud.js';
+import { player } from './player.js';
 
 // Set up page
 htmlSetup.addHtml();
@@ -21,6 +22,7 @@ gameState.preGame = true;
 
 // SET UP SCENE AND RENDERER
 
+// scene
 let scene = new THREE.Scene();
 
 // Renderer
@@ -32,7 +34,10 @@ document.getElementById('gameArea').appendChild(renderer.domElement);
 
 // Add game objects to scene
 skybox.addToScene(scene);
-ground.addToScene(scene);
+ground.createLevel();
+ground.addLevelToScene(scene);
+player.createPlayer();
+player.addToScene(scene);
 gameState.setGameBoot();
 
 let render = function () {
@@ -48,7 +53,9 @@ let render = function () {
     gameState.setGameTime();
 
     if (gameState.objectFocus) {
-        gameCamera.setLookAtVector(ground.getPosVector());
+
+        gameCamera.setLookAtVector(player.getPosVector());
+
     }
 
     if (gameState.preGame) {
@@ -63,17 +70,20 @@ let render = function () {
     }
 
     if (gameState.gameRunning) {
-        ground.process();
+
+        ground.processLevel();
+        player.processPlayer();
+        
     }
 
     if (gameState.levelComplete) {
 
-        ground.removeFromScene(scene);
+        ground.removeLevelFromScene(scene);
         skybox.removeFromScene(scene);
         gameState.level++;
         gameState.levelComplete = false;
-        ground.setLevelTextures();
-        ground.addToScene(scene);
+        ground.createLevel();
+        ground.addLevelToScene(scene);
         skybox.setTexturesForLevel();
         skybox.addToScene(scene);
 

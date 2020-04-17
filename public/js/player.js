@@ -1,44 +1,75 @@
+// Imports
+import { levels } from './levels.js';
+import { gameState } from './gameState.js';
+import { gameConfig } from './gameConfig.js';
+import { ground } from './ground.js';
+
+// Privates
+function getUrlsFromLevel(level) { return [
+
+    `../images/environment_map/${levels.eMapNameForLevel(level)}_ft.${levels.eMapFormatForLevel(level)}`,
+    `../images/environment_map/${levels.eMapNameForLevel(level)}_bk.${levels.eMapFormatForLevel(level)}`,
+    `../images/environment_map/${levels.eMapNameForLevel(level)}_up.${levels.eMapFormatForLevel(level)}`,
+    `../images/environment_map/${levels.eMapNameForLevel(level)}_dn.${levels.eMapFormatForLevel(level)}`,
+    `../images/environment_map/${levels.eMapNameForLevel(level)}_rt.${levels.eMapFormatForLevel(level)}`,
+    `../images/environment_map/${levels.eMapNameForLevel(level)}_lf.${levels.eMapFormatForLevel(level)}`,
+
+]};
+
+function getCubemap(urls) {
+
+    let cubemap = THREE.ImageUtils.loadTextureCube(urls);
+    cubemap.format = THREE.RGBFormat;
+    return cubemap;
+
+};
+
+function getReflectionMaterial(cubemap) {
+
+    return new THREE.MeshBasicMaterial({
+
+        color: 0x00AAEE,
+        envMap: cubemap,
+    
+    })
+
+};
+
+let playerObject = {};
+let reflectionMaterial = {};
+// Half player height plus the height of a tile
+let groundY = 0.5 * gameConfig.player.height + gameConfig.tile.height.normal;
+
 var player = {
 
-    width: 3,
-    height: 0.5,
-    depth: 3,
-
-    car: null,
-
-    health: 100,
-
-    setGeometry: function (x, y, z) {
-        return new THREE.BoxGeometry(x, y, z);
-    },
-
-    setMaterial: function () {
-        return new THREE.MeshLambertMaterial({color: 0xffffff});
-    },
-
-    setOtherMaterial: function (material) {
-        this.material = material;
-    },
-
-    getColor: function () {
-        console.log('Getting colour :' + this.material.color.getHexString());
-    }, 
-
-    setCar: function () {
-        this.car = new THREE.Mesh(
-            this.setGeometry(
-                this.width, 
-                this.height, 
-                this.depth
-            ), 
-            this.material
+    createPlayer: function() {
+        let geometry = new THREE.BoxGeometry(
+            gameConfig.player.width,
+            gameConfig.player.height,
+            gameConfig.player.length
         );
+        reflectionMaterial = getReflectionMaterial(
+            getCubemap(
+                getUrlsFromLevel(
+                    gameState.level
+                )
+            )
+        );
+        playerObject = new THREE.Mesh(geometry, reflectionMaterial);
+        playerObject.health = gameConfig.player.initialHealth;
+        playerObject.thrust = gameConfig.player.initialThrust;
+        playerObject.position.y = groundY;
+        playerObject.position.z = 8;
+        playerObject.velocity = new THREE.Vector3();
+        playerObject.velocity.x = 0;
+        playerObject.velocity.y = 0;
+        playerObject.velocity.z = 0;
     },
 
     setPosition: function (x, y, z) {
-        this.car.position.x = x;
-        this.car.position.y = y;
-        this.car.position.z = z;
+        playerObject.position.x = x;
+        playerObject.position.y = y;
+        playerObject.position.z = z;
     },
 
     /*
@@ -73,47 +104,129 @@ var player = {
     
     */
 
-    processPlayer: function (gameSpeed) {
+    processPlayer: function () {
         // Set the sides of the car
-        // Note the back of the car travels forward
-        this.car.back = this.car.position.z - this.depth * 0.5;
-        this.car.front = this.car.position.z + this.depth * 0.5;
-        this.car.left = this.car.position.x - this.width * 0.5;
-        this.car.right = this.car.position.x + this.width * 0.5;
-        this.car.top = this.car.position.y + this.width * 0.5;
-        this.car.bottom = this.car.position.y - this.width * 0.5;
-        // Move player back forward if player has been moved back
+        // Note the back (lowest Z) of the car travels forward (negatively into z)
+        playerObject.back = playerObject.position.z - gameConfig.player.length * 0.5;
+        playerObject.front = playerObject.position.z + gameConfig.player.length * 0.5;
+        playerObject.left = playerObject.position.x - gameConfig.player.width * 0.5;
+        playerObject.right = playerObject.position.x + gameConfig.player.width * 0.5;
+        playerObject.top = playerObject.position.y + gameConfig.player.height * 0.5;
+        playerObject.bottom = playerObject.position.y - gameConfig.player.height * 0.5;
 
-        // Restrict player on right
-        if (this.car.right > 12) {
-            player.car.position.x = 12 - this.width * 0.5;
+        // Process Movement
+
+        // Process Velocity - Input (handled in keyPresses.js)
+
+        // Process Velocity - Thrust (y)
+        if (playerObject.thrust <= 100) {
+            this.decreaseThrust(-gameConfig.thrustRegen);
         }
-        // Restrict player on left
-        if (this.car.left < -12) {
-            player.car.position.x = -12 + this.width * 0.5;
-        }
-        // Restrict player above ground (ground is at y=1)
-        if (this.car.bottom < 1) {
-            player.car.position.y = 0.5 + this.height * 0.5;
-        }
+        // Process Velocity - Gravity (y)
         
+
+        // Process Velocity - Friction (x and z)
+
+        // Process Movement - Based on velocity
+        playerObject.position.x += playerObject.velocity.x * gameState.getGameTimeDelta() * 0.001; 
+        playerObject.position.y += playerObject.velocity.y * gameState.getGameTimeDelta() * 0.001; 
+        playerObject.position.z += playerObject.velocity.z * gameState.getGameTimeDelta() * 0.001; 
+
+        // Process collision
+ 
+        // Is the player now above the ground?
+        if (playerObject.position.y > groundY) {
+            playerObject.velocity.y -= gameConfig.gravityAcc;
+            // Is there any ground beneath the player?
+        }
+        // If player is on ground zero y velocity
+        if (playerObject.position.y <= groundY) {
+            // zero any vertical velocity
+            playerObject.velocity.y = 0;
+
+        }
+        // Is the player now below the ground?
+        if (playerObject.position.y < groundY) {
+            playerObject.position.y = groundY;
+        }
+
     },
 
     addToScene: function (scene) {
-        scene.add(this.car);
+
+        scene.add(playerObject);
+
     },
 
     getHealth: function () {
-        return this.health;
+
+        return playerObject.health;
+
     },
 
     setHealth: function (health) {
-        this.health = health;
+
+        playerObject.health = health;
+
     },
 
     decreaseHealth: function (decrement) {
-        this.health -= decrement;
+
+        playerObject.health -= decrement;
+
     },
+
+    getThrust: function () {
+
+        return playerObject.thrust;
+
+    },
+
+    decreaseThrust: function (decrement) {
+
+        playerObject.thrust -= decrement;
+
+    },
+
+    getPosVector: function() {
+
+        return new THREE.Vector3(
+
+            playerObject.position.x,
+            playerObject.position.y,
+            playerObject.position.z,
+
+        );
+
+    },
+
+    getVelVector: function() {
+
+        return new THREE.Vector3(
+
+            playerObject.velocity.x,
+            playerObject.velocity.y,
+            playerObject.velocity.z,
+
+        );
+
+    },
+
+    setVelY: function(vel) {
+
+        playerObject.velocity.y = vel;
+
+    },
+
+    isOnGround: function () {
+
+        if (playerObject.position.y == groundY) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 
 };
 

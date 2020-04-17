@@ -11,26 +11,30 @@ let gameConfig = {
         farClip: 10001,
     },
 
-    gameSpeed: 0.1,
+    gameSpeed: 1.0, // applied as level movement change per second
     
-    // cameraStart: {
-    //     x: -100,
-    //     y: 5,
-    //     z: 100,
-    // },
+    gravityAcc: 1.0, // applied as player velocity change per second
+    thrustAcc: 4.0, // applied as player velocity change per second
+    thrustRegen: 0.5,
+    initialThrustImpulse: 2,
+    thrustUsageRate: 5,
 
-    gravity: 10,
+    tile: {
+        width: 5,
+        height: {
+            normal: 1,
+            block: 10,
+        },
+        length: 5,
+    },
 
-    // playerStart: {
-    //     x: -10.5,
-    //     y: 0.5,
-    //     z: 85,
-    // },
-
-    // lanes: {
-    //     count: 6, // must be even
-    //     width: 3,
-    // },
+    player: {
+        initialHealth: 100,
+        initialThrust: 80,
+        width: 4,
+        height: 0.5,
+        length: 4,
+    },
 
 };
 
