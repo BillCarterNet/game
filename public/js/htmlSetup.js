@@ -88,27 +88,37 @@ function populateDebugArea() {
 
     const debugArea = document.getElementById('debugHud');
     debugArea.setAttribute('hidden', 'true');
-    const headingsLevel = ['LEVEL', 'Tiles', 'Blocks', 'Holes', 'Normal'];
-    const headingsPlayer = ['VECTOR', 'X', 'Y', 'Z', ];
-    const headingsCamera = ['VECTOR', 'X', 'Y', 'Z', ];
-    const headingsGameState = ['STATE', 'VALUE', ];
-    const headingsFrame = ['FRAME (count)', 'TIME (ms)', 'FPS (lifetime)', 'FPS (last frame)', ];
-    const headingConfig = ['STATE', 'VALUE', ];
+
     const title = document.createElement('h1');
     title.innerText = '-[DEBUG]-';
     debugArea.appendChild(title);
-    let table = createTable('LEVEL', 'level', 1, 5, headingsLevel);
+
+    const headingsPlayer = ['VECTOR', 'X', 'Y', 'Z', 'W', ];
+    let table = createTable('PLAYER', 'player', 4, 5, headingsPlayer);
     debugArea.appendChild(table);
-    table = createTable('PLAYER', 'player', 2, 4, headingsPlayer);
+
+    const headingsPlayerMovement = ['LEFT', 'RIGHT', 'FORWARD', 'BACK', 'UP', ];
+    table = createTable('PLAYER MOVEMENT', 'playerMovement', 1, 5, headingsPlayerMovement);
     debugArea.appendChild(table);
+
+    const headingsCamera = ['VECTOR', 'X', 'Y', 'Z', ];
     table = createTable('CAMERA', 'camera', 2, 4, headingsCamera);
     debugArea.appendChild(table);
-    table = createTable('GAME STATE', 'gameState', 6, 2, headingsGameState);
+
+    const headingCollision = ['COLLISION', 'VALUE', ];
+    table = createTable('COLLISION', 'collision', 2, 2, headingCollision);
     debugArea.appendChild(table);
-    table = createTable('PERFORMANCE', 'frame', 1, 4, headingsFrame);
+
+    const headingGameState = ['GAME STATE', 'VALUE', ];
+    table = createTable('GAME STATE', 'gameState', 2, 2, headingGameState);
     debugArea.appendChild(table);
-    table = createTable('CONFIG', 'config', 6, 2, headingConfig);
+
+    const headingPerformance = ['FRAME', 'TIME (s)', 'DELTA (s)', '',];
+    table = createTable('PERFORMANCE', 'performance', 3, 4, headingPerformance);
     debugArea.appendChild(table);
+
+    let fpsGraph = createFpsGraph();
+    debugArea.appendChild(fpsGraph);
 
 }
 
@@ -116,6 +126,7 @@ function createTable(title, id, rows, cols, headings) {
 
     let tableContainer = document.createElement('div');
     tableContainer.setAttribute('id', 'tableContainer');
+
     let tableTitle = document.createElement('h2');
     tableTitle.innerText = title;
     tableContainer.appendChild(tableTitle);
@@ -154,18 +165,20 @@ function writePlayerArea(state) {
     switch (state) {
         case 'preGame':
             h1.innerText = 'A game by William Carter';
-            text = '<u>Controls</u><br><br>';
-            text += 'o / p - move camera X + / -<br>';
-            text += 'i / k - move camera Y + / -<br>';
-            text += 'u / j - move camera Z + / -<br>';
-            text += '<br>';
-            text += 'd - toggle debug window<br>';
-            text += 'h - skip level<br>';
-            text += 't - toggle player look<br>';
-            text += 'm - upward impuls<br>';
-            text += '<br>';
-            text += 'r / f / v - gameSpeed +0.1 / -0.1 / 0'
-            text += '<br><br><strong>Press any key to start</strong>';
+            text = 'Press any key to start<br><br>';
+            text += '<u>CONTROLS</u><br><br>';
+            text += '<u>Player</u><br><br>'; 
+            text += 'Direction - Forward / Back - W / S<br>';
+            text += 'Direction - Left / Right - A / D<br>';
+            text += 'Thrust - SPACE<br><br>';
+            text += '<u>Debug</u><br><br>'; 
+            text += 'Window - Toggle - F<br>';
+            text += 'GameState - Trigger GameOver - H<br><br>';
+            text += '<u>Camera</u><br><br>';
+            text += 'Focus On Player - Toggle - T<br>';
+            text += 'Direction - Forward / Back - U / J<br>';
+            text += 'Direction - Left / Right - O / P<br>';
+            text += 'Direction - Up / Down - I / K<br>';
             break;
         case 'gameOver':
             h1.innerText = 'GAME OVER';
@@ -175,7 +188,38 @@ function writePlayerArea(state) {
 
     p.innerHTML = text;
 
+}
 
+function createFpsGraph() {
+
+    let fpsGraphContainer = document.createElement('div');
+    fpsGraphContainer.setAttribute('id','fpsGraphContainer');
+
+    let bars = document.createElement('ul');
+    bars.setAttribute('id','bars');
+
+    for (let i = 0 ; i < 50 ; i++) {
+
+        let bar = document.createElement('li');
+
+        bar.setAttribute('id', `bar${i}`);
+        bar.setAttribute('class', 'bar');
+
+        bar.style.left = (i * 5 + 12.5) + 'px';
+        bar.style.margin = 0;
+        bar.style.bottom = 5 + 'px';
+
+        bars.appendChild(bar);
+
+    }
+
+    fpsGraphContainer.appendChild(bars);
+
+    let title = document.createElement('div');
+    title.innerText = 'Historic FPS';
+    fpsGraphContainer.appendChild(title);
+
+    return fpsGraphContainer;
 
 }
 

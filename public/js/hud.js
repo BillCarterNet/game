@@ -1,8 +1,6 @@
 import { htmlSetup } from './htmlSetup.js';
 import { cssSetup } from './cssSetup.js';
-import { player } from './player.js';
-import { ground } from './ground.js';
-import { gameCamera } from './gameCamera.js';
+import { newPlayer } from './newPlayer.js';
 import { gameState } from './gameState.js';
 
 let hud = {
@@ -10,8 +8,8 @@ let hud = {
     write: function() {
 
         htmlSetup.writeHudValue('playerLevel', gameState.level);
-        cssSetup.displayHealth(player.getHealth());
-        cssSetup.displayThrust(player.getThrust());
+        cssSetup.displayHealth(newPlayer.getHealth());
+        cssSetup.displayThrust(newPlayer.getThrust());
         
     },
 }

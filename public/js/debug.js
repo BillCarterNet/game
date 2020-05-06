@@ -1,69 +1,75 @@
 import { htmlSetup } from './htmlSetup.js';
-import { ground } from './ground.js';
+import { cssSetup } from './cssSetup.js';
 import { gameCamera } from './gameCamera.js';
 import { gameState } from './gameState.js';
-import { gameConfig } from './gameConfig.js';
-import { player } from './player.js';
+import { newPlayer } from './newPlayer.js';
 
 let debug = {
     
     write: function() {
 
-        htmlSetup.writeDebugValue('level_row_0_col_0', gameState.level);
-        htmlSetup.writeDebugValue('level_row_0_col_1', ground.getNoOfTiles());
-        htmlSetup.writeDebugValue('level_row_0_col_2', ground.getNoOfTilesByType('B'));
-        htmlSetup.writeDebugValue('level_row_0_col_3', ground.getNoOfTiles() - ground.getNoOfTilesByType('B') - ground.getNoOfTilesByType('N'));
-        htmlSetup.writeDebugValue('level_row_0_col_4', ground.getNoOfTilesByType('N'));
-
         htmlSetup.writeDebugValue('player_row_0_col_0', 'Position');
-        htmlSetup.writeDebugValue('player_row_0_col_1', player.getPosVector().x.toFixed(1).toString());
-        htmlSetup.writeDebugValue('player_row_0_col_2', player.getPosVector().y.toFixed(1).toString());
-        htmlSetup.writeDebugValue('player_row_0_col_3', player.getPosVector().z.toFixed(1).toString());
+        htmlSetup.writeDebugValue('player_row_0_col_1', newPlayer.getPosVector().x.toFixed(2).toString());
+        htmlSetup.writeDebugValue('player_row_0_col_2', newPlayer.getPosVector().y.toFixed(2).toString());
+        htmlSetup.writeDebugValue('player_row_0_col_3', newPlayer.getPosVector().z.toFixed(2).toString());
 
-        htmlSetup.writeDebugValue('player_row_1_col_0', 'Velcocity (units/s)');
-        htmlSetup.writeDebugValue('player_row_1_col_1', player.getVelVector().x.toFixed(1).toString());
-        htmlSetup.writeDebugValue('player_row_1_col_2', player.getVelVector().y.toFixed(1).toString());
-        htmlSetup.writeDebugValue('player_row_1_col_3', player.getVelVector().z.toFixed(1).toString());
+        htmlSetup.writeDebugValue('player_row_1_col_0', 'Rotation (Quaternion)');
+        htmlSetup.writeDebugValue('player_row_1_col_1', newPlayer.getRotQuaternion().x.toFixed(2).toString());
+        htmlSetup.writeDebugValue('player_row_1_col_2', newPlayer.getRotQuaternion().y.toFixed(2).toString());
+        htmlSetup.writeDebugValue('player_row_1_col_3', newPlayer.getRotQuaternion().z.toFixed(2).toString());
+        htmlSetup.writeDebugValue('player_row_1_col_4', newPlayer.getRotQuaternion().w.toFixed(2).toString());
+
+        htmlSetup.writeDebugValue('player_row_2_col_0', 'Rotation (Euler degr)');
+        htmlSetup.writeDebugValue('player_row_2_col_1', newPlayer.getEulerAngles().x.toFixed(2).toString());
+        htmlSetup.writeDebugValue('player_row_2_col_2', newPlayer.getEulerAngles().y.toFixed(2).toString());
+        htmlSetup.writeDebugValue('player_row_2_col_3', newPlayer.getEulerAngles().z.toFixed(2).toString());
+
+        htmlSetup.writeDebugValue('playerMovement_row_0_col_0', newPlayer.getMoveDirection().left);
+        htmlSetup.writeDebugValue('playerMovement_row_0_col_1', newPlayer.getMoveDirection().right);
+        htmlSetup.writeDebugValue('playerMovement_row_0_col_2', newPlayer.getMoveDirection().forward);
+        htmlSetup.writeDebugValue('playerMovement_row_0_col_3', newPlayer.getMoveDirection().back);
+        htmlSetup.writeDebugValue('playerMovement_row_0_col_4', newPlayer.getMoveDirection().up);
 
         htmlSetup.writeDebugValue('camera_row_0_col_0', 'Position');
-        htmlSetup.writeDebugValue('camera_row_0_col_1', gameCamera.getPosVector().x.toFixed(1).toString());
-        htmlSetup.writeDebugValue('camera_row_0_col_2', gameCamera.getPosVector().y.toFixed(1).toString());
-        htmlSetup.writeDebugValue('camera_row_0_col_3', gameCamera.getPosVector().z.toFixed(1).toString());
+        htmlSetup.writeDebugValue('camera_row_0_col_1', gameCamera.getPosVector().x.toFixed(2).toString());
+        htmlSetup.writeDebugValue('camera_row_0_col_2', gameCamera.getPosVector().y.toFixed(2).toString());
+        htmlSetup.writeDebugValue('camera_row_0_col_3', gameCamera.getPosVector().z.toFixed(2).toString());
 
         htmlSetup.writeDebugValue('camera_row_1_col_0', 'Look At');
-        htmlSetup.writeDebugValue('camera_row_1_col_1', gameCamera.getLookAtVector().x.toFixed(1).toString());
-        htmlSetup.writeDebugValue('camera_row_1_col_2', gameCamera.getLookAtVector().y.toFixed(1).toString());
-        htmlSetup.writeDebugValue('camera_row_1_col_3', gameCamera.getLookAtVector().z.toFixed(1).toString());
+        htmlSetup.writeDebugValue('camera_row_1_col_1', gameCamera.getLookAtVector().x.toFixed(2).toString());
+        htmlSetup.writeDebugValue('camera_row_1_col_2', gameCamera.getLookAtVector().y.toFixed(2).toString());
+        htmlSetup.writeDebugValue('camera_row_1_col_3', gameCamera.getLookAtVector().z.toFixed(2).toString());
 
-        htmlSetup.writeDebugValue('gameState_row_0_col_0', 'preGame');
-        htmlSetup.writeDebugValue('gameState_row_0_col_1', gameState.preGame);
+        htmlSetup.writeDebugValue('collision_row_0_col_0', 'Impulse');
+        htmlSetup.writeDebugValue('collision_row_0_col_1', gameState.collisionImpulse.toFixed(2).toString());
+        htmlSetup.writeDebugValue('collision_row_1_col_0', 'ImpulseMax');
+        htmlSetup.writeDebugValue('collision_row_1_col_1', gameState.collisionImpulseMax.toFixed(2).toString());
+
+        htmlSetup.writeDebugValue('gameState_row_0_col_0', 'gameOver');
+        htmlSetup.writeDebugValue('gameState_row_0_col_1', gameState.gameOver);
         htmlSetup.writeDebugValue('gameState_row_1_col_0', 'gameRunning');
         htmlSetup.writeDebugValue('gameState_row_1_col_1', gameState.gameRunning);
-        htmlSetup.writeDebugValue('gameState_row_2_col_0', 'levelComplete');
-        htmlSetup.writeDebugValue('gameState_row_2_col_1', gameState.levelComplete);
-        htmlSetup.writeDebugValue('gameState_row_3_col_0', 'gameTimeDelta (ms)');
-        htmlSetup.writeDebugValue('gameState_row_3_col_1', gameState.getGameTimeDelta().toString());
-        // htmlSetup.writeDebugValue('gameState_row_5_col_0', 'gameTimeLastFrame');
-        // htmlSetup.writeDebugValue('gameState_row_5_col_1', gameState.gameTimeLastFrame.toFixed(3).toString());
 
-        htmlSetup.writeDebugValue('frame_row_0_col_0', gameState.frame);
-        htmlSetup.writeDebugValue('frame_row_0_col_1', gameState.gameTime - gameState.gameBoot);
-        htmlSetup.writeDebugValue('frame_row_0_col_2', (gameState.frame / (gameState.gameTime - gameState.gameBoot) * 1000).toFixed(1).toString());
-        htmlSetup.writeDebugValue('frame_row_0_col_3', (1000/(gameState.gameTime - gameState.gameTimeLastFrame)).toFixed(1).toString());
+        htmlSetup.writeDebugValue('performance_row_0_col_0', gameState.frame);
+        htmlSetup.writeDebugValue('performance_row_0_col_1', gameState.gameTime.toFixed(1).toString());
+        htmlSetup.writeDebugValue('performance_row_0_col_2', gameState.gameTimeDelta.toFixed(3).toString());
 
-        htmlSetup.writeDebugValue('config_row_0_col_0', 'gameSpeed');
-        htmlSetup.writeDebugValue('config_row_0_col_1', gameConfig.gameSpeed.toFixed(1).toString());
-        htmlSetup.writeDebugValue('config_row_1_col_0', 'gravityAcc');
-        htmlSetup.writeDebugValue('config_row_1_col_1', gameConfig.gravityAcc.toFixed(1).toString());
-        htmlSetup.writeDebugValue('config_row_2_col_0', 'thrustAcc');
-        htmlSetup.writeDebugValue('config_row_2_col_1', gameConfig.thrustAcc.toFixed(1).toString());
-        htmlSetup.writeDebugValue('config_row_3_col_0', 'thrustRegen');
-        htmlSetup.writeDebugValue('config_row_3_col_1', gameConfig.thrustRegen.toFixed(1).toString());
-        htmlSetup.writeDebugValue('config_row_4_col_0', 'initialThrustImpulse');
-        htmlSetup.writeDebugValue('config_row_4_col_1', gameConfig.initialThrustImpulse.toFixed(1).toString());
-        htmlSetup.writeDebugValue('config_row_5_col_0', 'thrustUsageRate');
-        htmlSetup.writeDebugValue('config_row_5_col_1', gameConfig.thrustUsageRate.toFixed(1).toString());
+        htmlSetup.writeDebugValue('performance_row_1_col_0', 'FPS (last frame)');
+        htmlSetup.writeDebugValue('performance_row_1_col_1', 'FPS (all time)');
+        htmlSetup.writeDebugValue('performance_row_1_col_2', 'FPS (max)');
+        htmlSetup.writeDebugValue('performance_row_1_col_3', 'FPS (min)');
 
+        htmlSetup.writeDebugValue('performance_row_2_col_0', gameState.fps.toFixed(0).toString());
+        htmlSetup.writeDebugValue('performance_row_2_col_1', (gameState.frame / gameState.gameTime).toFixed(0).toString());
+        htmlSetup.writeDebugValue('performance_row_2_col_2', gameState.fpsMax.toFixed(0).toString());
+        htmlSetup.writeDebugValue('performance_row_2_col_3', gameState.fpsMin.toFixed(0).toString());
+
+        for (let i = 0 ; i < 50 ; i++) {
+
+            cssSetup.setBarFpsValue(i, gameState.fpsHistory[i]);
+
+        }
+        
     },
 }
 

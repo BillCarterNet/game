@@ -4,30 +4,49 @@ import { gameState } from './gameState.js';
 let sbGeometry = new THREE.CubeGeometry( 10000, 10000, 10000);
 
 function getSbMaterialsForLevel(level) { return [
+
   new THREE.MeshBasicMaterial({
+
     map: new THREE.TextureLoader().load(`../images/environment_map/${levels.eMapNameForLevel(level)}_ft.${levels.eMapFormatForLevel(level)}`),
     side: THREE.DoubleSide
+
   }),
+
   new THREE.MeshBasicMaterial({
+
     map: new THREE.TextureLoader().load(`../images/environment_map/${levels.eMapNameForLevel(level)}_bk.${levels.eMapFormatForLevel(level)}`),
     side: THREE.DoubleSide
+
   }),
+
   new THREE.MeshBasicMaterial({
+
     map: new THREE.TextureLoader().load(`../images/environment_map/${levels.eMapNameForLevel(level)}_up.${levels.eMapFormatForLevel(level)}`),
     side: THREE.DoubleSide
+
   }),
+
   new THREE.MeshBasicMaterial({
+
     map: new THREE.TextureLoader().load(`../images/environment_map/${levels.eMapNameForLevel(level)}_dn.${levels.eMapFormatForLevel(level)}`),
     side: THREE.DoubleSide
+
   }),
+
   new THREE.MeshBasicMaterial({
+
     map: new THREE.TextureLoader().load(`../images/environment_map/${levels.eMapNameForLevel(level)}_rt.${levels.eMapFormatForLevel(level)}`),
     side: THREE.DoubleSide
+
   }),
+
   new THREE.MeshBasicMaterial({
+
     map: new THREE.TextureLoader().load(`../images/environment_map/${levels.eMapNameForLevel(level)}_lf.${levels.eMapFormatForLevel(level)}`),
     side: THREE.DoubleSide
+    
   }),
+
 ]};
 
 let sbMaterials = getSbMaterialsForLevel(gameState.level);

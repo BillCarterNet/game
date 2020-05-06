@@ -1,5 +1,3 @@
-let date = new Date();
-
 let gameState = {
 
     preGame: false,
@@ -7,31 +5,40 @@ let gameState = {
     levelComplete: false,
     gameOver: false,
     debug: false,
-    objectFocus: false,
-    level: 1,
+    objectFocus: true,
+    pausePhysics: false,
+
+    level: 2,
     score: 0,
     frame: 0,
-    gameBoot: 0, // time in ms
-    gameTime: 0, // time in ms
-    gameTimeLastFrame: 0, // time in ms
-    //gameTimeDelta: this.gameTime - this.gameTimeLastFrame,
 
-    setGameBoot: function() {
-        this.gameBoot = date.getTime();
+    gameTime: 0,
+    gameTimeDelta: 0,
+
+    collisionImpulse: 0,
+    collisionImpulseMax: 0,
+
+    fps: 0,
+    fpsMax: 0,
+    fpsMin: 0,
+    fpsHistory: [],
+    fpsHistoryCounter: 0,
+
+    initFpsHistory: function() {
+
+        for(let i = 0 ; i < 50 ; i++) {
+
+            this.fpsHistory[i] = 0;
+
+        }
+
     },
 
-    setGameTime: function() {
-        let newDate = new Date();
-        this.gameTime = newDate.getTime();
-    },
+    writeFpsHistory: function() {
 
-    init: function() {
-        this.score = 0;
-        this.level = 1;
-    },
+        this.fpsHistory.unshift(this.fps);
+        this.fpsHistory.pop();
 
-    getGameTimeDelta: function() {
-        return this.gameTime - this.gameTimeLastFrame;
     },
 
 };

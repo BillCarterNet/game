@@ -16,6 +16,13 @@ function addRule(selector, rule) {
       }
           
 }
+
+function editElementCSS(id, property, value) {
+
+    let element = document.getElementById(id);
+    element.style[property] = value;
+
+}
        
 function addCanvas() {
 
@@ -46,12 +53,10 @@ function addHudClass() {
 function addTableClass() {
 
     addRule('.table', 'align: center');
-    addRule('.table', 'width: 175px;');
+    addRule('.table', 'width: 100%;');
     addRule('.table', 'text-align: center;');
     addRule('h2', 'margin-top: 2px;');
     addRule('h2', 'margin-bottom: 5px;');
-    //addRule('.table', 'margin-left: 5%;');
-    //addRule('.table', 'margin-right: 5%;');
 
 }
 
@@ -60,7 +65,6 @@ function addPlayerHud() {
     addRule('#playerHud', 'top: 0;')
     addRule('#playerHud', 'left: 0;')
     addRule('#playerHud', 'width: 200px;')
-    // addRule('#playerHud', 'height: 200px;')
 
 }
 
@@ -70,7 +74,6 @@ function addMessageArea() {
     addRule('#messageArea', 'right: 200px;');
     addRule('#messageArea', 'left: 400px;');
     addRule('#messageArea', 'width: 480px;');
-    //addRule('#messageArea', 'height: 200px;');
 
 }
 
@@ -78,12 +81,19 @@ function addDebugHud() {
 
     addRule('#debugHud', 'top: 0;');
     addRule('#debugHud', 'right: 0;');
-    //addRule('#debugHud', 'width: 200px;');
-    //addRule('#debugHud', 'height: 500px;');
+    addRule('#debugHud', 'left: 1000px;');
     addRule('#debugHud', 'font-size: 10px;');
     addRule('#tableContainer', 'margin: 5px;');
     addRule('#tableContainer', 'text-align: center;');
     addRule('h1', 'margin: 5px;');
+    addRule('#fpsGraphContainer', 'height: 100px;');
+    addRule('#fpsGraphContainer', 'margin: 5px;');
+    addRule('#fpsGraphContainer', 'border: 1px solid #d3d3d3;')
+    addRule('.bar', 'position:absolute;');
+    addRule('.bar', 'list-style:none;');
+    addRule('.bar', 'width: 3px;');
+    addRule('.bar', 'text-align: center;');
+    addRule('.bar', 'border: 1px solid #d3d3d3;');
 
 }
 
@@ -143,15 +153,22 @@ let cssSetup = {
 
         if (x <= 0) {x = 0};
         if (x >= 100) {x = 100};
-        addRule('#healthBar', `width: ${x}%;`);        
+        editElementCSS('healthBar', 'width', `${x}%`);        
 
     },
 
     displayThrust: function (x) {
 
         if (x <= 0) {x = 0};
-        if (x >= 100) {x = 100};
-        addRule('#thrustBar', `width: ${x}%;`);        
+        if (x >= 100) {x = 100};  
+        editElementCSS('thrustBar', 'width', `${x}%`); 
+
+    },
+
+    setBarFpsValue: function (bar, value) {
+
+        if (value > 100) {value = 100;} // Extends outside the box otherwise
+        editElementCSS(`bar${bar}`, 'height', `${value}px`)
 
     },
 
