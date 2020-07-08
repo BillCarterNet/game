@@ -5,6 +5,6 @@ An attempt at making a game that runs in a web browser using three.js and ammo.j
 After cloning run `npm install` to get the dependencies installed (not many)  
 
 ## Execution
-Run `node server.js`
+Run `node localServer.js`
 This will run a local server on `http://localhost:8081`
-Visit to see the game
+Visit `http://localhost:8081` to see the game
