@@ -40,13 +40,46 @@ function addGameArea() {
 
 }
 
+function addSplash() {
+
+    addRule('div.splash', 'height: 720px');
+    addRule('div.splash', 'width: 1280px');
+    addRule('div.splash', 'z-index: 1');
+    addRule('div.splash', 'position: absolute');
+    // height: 720px;width: 1280px;border-style: solid;z-index: 1;position: absolute;
+    addRule('#splashImage', 'max-height: 100%;');
+    addRule('#splashImage', 'max-width: 100%;');
+    // max-height: 100%;max-width: 100%;
+    addRule('.loader', 'border: 16px solid #ffffff; /* Light grey */');
+    addRule('.loader', 'border-bottom: 16px solid #000000; /* Light grey */');
+    addRule('.loader', 'border-top: 16px solid #000000; /* Blue */');
+    addRule('.loader', 'border-radius: 50%;');
+    addRule('.loader', 'width: 40px;');
+    addRule('.loader', 'height: 40px;');
+    addRule('.loader', 'animation: spin 2s linear infinite;');
+    // addRule('.loader', 'position: absolute'); 
+    // addRule('.loader', 'right: 20px'); 
+    // addRule('.loader', 'bottom: 20px');
+    // addRule('.spinnerText', 'position: absolute');
+    // addRule('.spinnerText', 'width: 40px;');
+    // addRule('.spinnerText', 'right: 20px'); 
+    // addRule('.spinnerText', 'bottom: 100px');
+    addRule('.spinnerText', 'padding: 5px;');
+    addRule('.spinnerText', 'font-family: sans-serif;');
+    addRule('.spinnerContainer', 'text-align: center;');
+    addRule('.spinnerContainer', 'position: absolute');
+    addRule('.spinnerContainer', 'right: 20px'); 
+    addRule('.spinnerContainer', 'bottom: 20px');
+
+}
+
 function addHudClass() {
 
     addRule('.hud', 'position: absolute;');
     addRule('.hud', 'border: 2px solid #d3d3d3;');
     addRule('.hud', 'color: white;');
     addRule('.hud', 'text-align: center;');
-    addRule('.hud', 'background: rgba(0, 0, 0, 0.5);');
+    addRule('.hud', 'background: rgba(0, 0, 0, 0.75);');
 
 }
 
@@ -131,12 +164,34 @@ function addPlayerThrustBar() {
 
 }
 
+function addLoadingBarContainer() {
+
+    addRule('#loadingBarContainer', 'margin-left: 10%;');
+    addRule('#loadingBarContainer', 'margin-right: 10%;');
+    addRule('#loadingBarContainer', 'border: 3px solid black;');
+    addRule('#loadingBarContainer', 'height: 20px;');
+    addRule('#loadingBarContainer', 'margin-top: 5px;');
+    addRule('#loadingBarContainer', 'margin-left: 0px;');
+    addRule('#loadingBarContainer', 'margin-right: 0px;');
+
+}
+  
+function addLoadingBar() {
+
+    addRule('#loadingBar', 'background-color: black');
+    addRule('#loadingBar', 'height: 20px;');
+    addRule('#loadingBar', 'width: 100%;');
+    //addRule('#loadingBar', 'padding: 5px;');
+
+}
+
 let cssSetup = {
 
     addCss: function() {
 
         addCanvas();
         addGameArea();
+        addSplash();
         addHudClass();
         addTableClass();
         addPlayerHud();
@@ -146,6 +201,8 @@ let cssSetup = {
         addPlayerHealthBar();
         addPlayerThrustBarContainer();
         addPlayerThrustBar();
+        addLoadingBarContainer();
+        addLoadingBar();
 
     },
 
@@ -154,6 +211,14 @@ let cssSetup = {
         if (x <= 0) {x = 0};
         if (x >= 100) {x = 100};
         editElementCSS('healthBar', 'width', `${x}%`);        
+
+    },
+
+    displayLoading: function (x) {
+
+        if (x <= 0) {x = 0};
+        if (x >= 100) {x = 100};
+        editElementCSS('loadingBar', 'width', `${x}%`);        
 
     },
 

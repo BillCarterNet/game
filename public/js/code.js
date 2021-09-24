@@ -113,6 +113,15 @@ let renderFrame = function () {
 
     }
 
+    const loadingFrame = 500;
+    cssSetup.displayLoading(Math.round(gameState.frame / loadingFrame * 100));
+
+    if (gameState.frame > loadingFrame) {
+
+        document.getElementById('splash').hidden = true;
+
+    }
+
     if (gameState.preGame) {
 
         document.getElementById('messageArea').hidden = false;

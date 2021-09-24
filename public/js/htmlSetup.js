@@ -78,6 +78,10 @@ function populateMessageArea() {
   h1.setAttribute('id', 'messageAreaH1');
   messageArea.appendChild(h1);
 
+  let h2 = document.createElement('h2');
+  h2.setAttribute('id', 'messageAreaH2');
+  messageArea.appendChild(h2);
+
   let p = document.createElement('p');
   p.setAttribute('id', 'messageAreaP');
   messageArea.appendChild(p);
@@ -122,6 +126,40 @@ function populateDebugArea() {
 
 }
 
+function populateSplash() {
+
+    const splash = document.getElementById('splash');
+
+    const image = document.createElement('img');
+    image.setAttribute('src', '../images/C3-Final.png');
+    image.setAttribute('id', 'splashImage');
+
+    const spinnerContainer = document.createElement('div');
+    spinnerContainer.setAttribute('class', 'spinnerContainer');
+
+    const spinner = document.createElement('div');
+    spinner.setAttribute('class', 'loader');
+
+    const spinnerText = document.createElement('div');
+    spinnerText.setAttribute('class', 'spinnerText');
+    spinnerText.innerText = 'LOADING';
+
+    spinnerContainer.appendChild(spinnerText);
+
+
+    let loadingBarContainer = document.createElement('div');
+    loadingBarContainer.setAttribute('id', 'loadingBarContainer');
+    spinnerContainer.appendChild(loadingBarContainer);
+
+    let loadingBar = document.createElement('div');
+    loadingBar.setAttribute('id', 'loadingBar');
+    loadingBarContainer.appendChild(loadingBar);
+
+    splash.appendChild(image);
+    splash.appendChild(spinnerContainer);
+
+}
+
 function createTable(title, id, rows, cols, headings) {
 
     let tableContainer = document.createElement('div');
@@ -159,12 +197,14 @@ function createTable(title, id, rows, cols, headings) {
 function writePlayerArea(state) {
 
     let h1 = document.getElementById('messageAreaH1');
+    let h2 = document.getElementById('messageAreaH2');
     let p = document.getElementById('messageAreaP');
     let text = '';
     
     switch (state) {
         case 'preGame':
-            h1.innerText = 'A game by William Carter';
+            h1.innerText = 'The Carter Computer Company presents...';
+            h2.innerText = 'A game!';
             text = 'Press any key to start<br><br>';
             text += '<u>CONTROLS</u><br><br>';
             text += '<u>Player</u><br><br>'; 
@@ -228,12 +268,14 @@ let htmlSetup = {
     addHtml: function() {
 
         addDivToBody('gameArea', 'gameArea');
+        addDivToDiv('gameArea', 'splash', 'splash');
         addDivToDiv('gameArea', 'playerHud', 'hud');
         addDivToDiv('gameArea', 'debugHud', 'hud');
         addDivToDiv('gameArea', 'messageArea', 'hud');
         populatePlayerHud();
         populateMessageArea();
         populateDebugArea();
+        populateSplash();
 
     },
 
