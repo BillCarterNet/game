@@ -18,6 +18,7 @@ import { eventHandlers } from './eventHandlers.js';
 // Set up page
 htmlSetup.addHtml();
 cssSetup.addCss();
+document.getElementById('gameArea').hidden = true;
 
 // Listen for keyboard input 
 keyPresses.process();
@@ -119,6 +120,7 @@ let renderFrame = function () {
     if (gameState.frame > loadingFrame) {
 
         document.getElementById('splash').hidden = true;
+        document.getElementById('gameArea').hidden = false;
 
     }
 

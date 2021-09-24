@@ -267,8 +267,8 @@ let htmlSetup = {
 
     addHtml: function() {
 
+        addDivToBody('splash', 'splash');
         addDivToBody('gameArea', 'gameArea');
-        addDivToDiv('gameArea', 'splash', 'splash');
         addDivToDiv('gameArea', 'playerHud', 'hud');
         addDivToDiv('gameArea', 'debugHud', 'hud');
         addDivToDiv('gameArea', 'messageArea', 'hud');
